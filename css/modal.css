@@ -41,7 +41,7 @@
     height: 40px;
     width: 100%;
 }
-.modal_footer input {
+.modal_alertBtn {
     position: absolute;
     width: 80px;
     bottom: 10px;

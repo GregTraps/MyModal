@@ -10,23 +10,39 @@ require.config({
     }
 });
 require(["jquery","modal"],function ($, m) {
-    var modalAlert = new m.Modal();
-    modalAlert.on("close",function () {
-        alert ("will close the modal");
-    });
+   // var modalAlert = new m.Modal();
     $("#btn-alert").click(function () {
-        return modalAlert.alert({
+        return new m.Modal().alert({
             width : 200,
             height : 250,
             content : "Welcome!",
-            // alertHandler : function () {
-            //     alert("clicked");
-            // },
-            // closeHandler : function () {
-            //     alert("close");
-            // },
             title : "Notice",
             hasCloseBtn : true
+        }).on("close",function () {
+            console.log("close");
+        }).on("alert",function () {
+            console.log("alert");
+        }).on("confirm",function () {
+            console.log("confirm");
+        }).on("cancel",function () {
+            console.log("cancel");
+        });
+    });
+    $("#btn-confirm").click(function () {
+        return new m.Modal().confirm({
+            width : 200,
+            height : 250,
+            content : "Welcome!",
+            title : "Notice",
+            hasCloseBtn : false
+        }).on("close",function () {
+            console.log("close");
+        }).on("alert",function () {
+            console.log("alert");
+        }).on("confirm",function () {
+            console.log("confirm");
+        }).on("cancel",function () {
+            console.log("cancel");
         });
     });
 });

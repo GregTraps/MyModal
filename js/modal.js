@@ -9,7 +9,10 @@ define(['jquery','jqueryUI','widget'],function ($,$UI,widget) {
             hasMask : true,
             content : "",  //modal_body中的内容
            // alertHandler : function (){}, //单机确定后的事件函数
+            winType : "alert",//默认事件类型
             alertBtnText : "OK",
+            confirmBtnText : "确定",
+            cancelBtnText : "取消",
             title : "提示", //modal_header中的提示
             hasCloseBtn : false,
             //  closeHandler : function () {},
@@ -18,58 +21,84 @@ define(['jquery','jqueryUI','widget'],function ($,$UI,widget) {
         };
     }
     Modal.prototype = $.extend({},new widget.Widget(),{
-        alert : function (cfg){
-            var config = $.extend(this.cfg,cfg);
-            var that = this;
-            var boundingBox = $('<div class="modal_boundingBox">'+
+        renderUI : function () {
+            var config = this.cfg;
+            var footerContent = '';
+            switch (this.cfg.winType){
+                case "alert":
+                    footerContent = '<input class="modal_alertBtn" type="button" value="'+
+                        config.alertBtnText+'">'+'</div>';
+                    break;
+                case "confirm":
+                    footerContent = '<input class="modal_confirmBtn" type="button" value="'+
+                        config.confirmBtnText+'">'+'<input class="modal_cancelBtn" type="button" value="'+
+                        config.cancelBtnText+'">'+'</div>';
+                    break;
+            }
+            this.boundingBox = $('<div class="modal_boundingBox">'+
                 '<div class="modal_header">'+config.title+'</div>'+
                 '<div class="modal_body">'+config.content+'</div>'+
-                '<div class="modal_footer">'+'<input type="button" value="'+config.alertBtnText+'">'+'</div>'+
-                                    '</div>');
+                '<div class="modal_footer">'+footerContent+ '</div>');
             if (config.hasMask){
-                var mask = $('<div class="modal_mask"></div>');
-                mask.appendTo("body");
+                this.mask = $('<div class="modal_mask"></div>');
+                this.mask.appendTo("body");
             }
-            boundingBox.appendTo("body");
             if (config.isDraggable){
-                boundingBox.draggable({
-                    handle : boundingBox.find(".modal_header")
+                this.boundingBox.draggable({
+                    handle : this.boundingBox.find(".modal_header")
                 });
             }
-            var btn = boundingBox.find(".modal_footer input");
-            btn.click(function(){
+            if (config.hasCloseBtn) {
+                var closeBtn = $('<span class="modal_closeBtn">X</span>');
+                closeBtn.appendTo(this.boundingBox)
+            }
+            this.boundingBox.appendTo(document.body);
+           // boundingBox.appendTo("body");
+        },
+        bindUI : function () {
+            var that = this;
+            this.boundingBox.delegate(".modal_alertBtn","click",function(){
                 that.fire("alert");
-                boundingBox.remove();
-                mask && mask.remove();
-                return false;
+                that.destroy();
             });
-            // if (config.alertHandler){
-            //     this.on("alert",config.alertHandler);
-            // }
-            boundingBox.css({
+            this.boundingBox.delegate(".modal_closeBtn","click",function(){
+                that.fire("close");
+                that.destroy();
+            });
+            this.boundingBox.delegate(".modal_confirmBtn","click",function(){
+                that.fire("confirm");
+                that.destroy();
+            });
+            this.boundingBox.delegate(".modal_cancelBtn","click",function(){
+                that.fire("cancel");
+                that.destroy();
+            })
+        },
+        syncUI : function () {
+            var config = this.cfg;
+            this.boundingBox.css({
                 width : config.width+"px",
                 height : config.height+"px",
                 left : (config.x || (window.innerWidth - config.width) / 2) + "px",
                 top : (config.y || (window.innerHeight - config.height) / 2) + "px"
             });
-            if (config.hasCloseBtn){
-                var closeBtn = $('<span class="modal_closeBtn">X</span>');
-                closeBtn.appendTo(boundingBox);
-                closeBtn.click(function () {
-                    boundingBox.remove();
-                    mask && mask.remove();
-                    that.fire("close");
-                });
-                // if (config.closeHandler){
-                //     this.on("close",config.closeHandler);
-                // }
-            }
             if (config.skinClassName) {
-                boundingBox.addClass(config.skinClassName)
+               this.boundingBox.addClass(config.skinClassName)
             }
+        },
+        destructor : function () {
+            this.mask && this.mask.remove();
+        },
+        alert : function (cfg){
+            $.extend(this.cfg,cfg,{winType : "alert"});
+            this.render();
             return this;
         },
-        confirm:function () {},
+        confirm:function (cfg) {
+            $.extend(this.cfg,cfg,{winType : "confirm"});
+            this.render();
+            return this;
+        },
         prompt:function () {}
     });
     return {
