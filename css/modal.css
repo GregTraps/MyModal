@@ -4,7 +4,21 @@
     box-shadow: 0 0 12px rgba(0,0,0,0.5);
     text-align: center;
 }
-.modal_boundingBox input {
+.modal_header {
+    background-color: cadetblue;
+    color: white;
+}
+.modal_body {
+    padding: 20px;
+}
+.modal_footer {
+    background-color: azure;
+    position: absolute;
+    bottom: 0;
+    height: 40px;
+    width: 100%;
+}
+.modal_footer input {
     position: absolute;
     width: 80px;
     bottom: 10px;

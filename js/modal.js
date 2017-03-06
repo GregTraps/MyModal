@@ -7,17 +7,20 @@ define(['jquery'],function ($) {
             width : 500,
             height : 300,
             content : "",
-            handler : function (){}
+            handler : function (){},
+            title : "提示"
         };
     }
     Modal.prototype = {
         alert : function (cfg){
             var config = $.extend(this.cfg,cfg);
-            var boundingBox = $('<div class="modal_boundingBox"></div>');
+            var boundingBox = $('<div class="modal_boundingBox">'+
+                '<div class="modal_header">'+config.title+'</div>'+
+                '<div class="modal_body">'+config.content+'</div>'+
+                '<div class="modal_footer">'+'<input type="button" value="确定">'+'</div>'+
+                                    '</div>');
             boundingBox.appendTo("body");
-            boundingBox.html(config.content);
-            var btn = $('<input type="button" value="确定">');
-            btn.appendTo(boundingBox);
+            var btn = boundingBox.find(".modal_footer input");
             btn.click(function(){
                 config.handler && config.handler();
                 boundingBox.remove();

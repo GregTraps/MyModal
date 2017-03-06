@@ -14,7 +14,8 @@ require(["jquery","modal"],function ($, m) {
             content : "Welcome!",
             handler : function () {
                 alert("clicked");
-            }
+            },
+            title : "Notice"
         });
     });
 });
