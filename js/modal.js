@@ -5,27 +5,29 @@ define(['jquery'],function ($) {
     function Modal() {
         this.cfg = {
             width : 500,
-            height : 300
+            height : 300,
+            content : "",
+            handler : function (){}
         };
     }
     Modal.prototype = {
-        alert : function (content,handler,cfg){
+        alert : function (cfg){
+            var config = $.extend(this.cfg,cfg);
             var boundingBox = $('<div class="modal_boundingBox"></div>');
             boundingBox.appendTo("body");
-            boundingBox.html(content);
+            boundingBox.html(config.content);
             var btn = $('<input type="button" value="确定">');
             btn.appendTo(boundingBox);
             btn.click(function(){
-                handler && handler();
+                config.handler && config.handler();
                 boundingBox.remove();
                 return false;
             });
-            $.extend(this.cfg,cfg);
             boundingBox.css({
-                width : this.cfg.width+"px",
-                height : this.cfg.height+"px",
-                left : (this.cfg.x || (window.innerWidth - this.cfg.width) / 2) + "px",
-                top : (this.cfg.y || (window.innerHeight - this.cfg.height) / 2) + "px"
+                width : config.width+"px",
+                height : config.height+"px",
+                left : (config.x || (window.innerWidth - config.width) / 2) + "px",
+                top : (config.y || (window.innerHeight - config.height) / 2) + "px"
             })
         },
         confirm:function () {},

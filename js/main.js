@@ -8,11 +8,13 @@ require.config({
 });
 require(["jquery","modal"],function ($, m) {
     $("#btn-alert").click(function () {
-        return new m.Modal().alert("welcome!",function () {
-            alert("clicked");
-        },{
-            width : 300,
-            height : 150
+        return new m.Modal().alert({
+            width : 200,
+            height : 250,
+            content : "Welcome!",
+            handler : function () {
+                alert("clicked");
+            }
         });
     });
 });
