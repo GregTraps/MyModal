@@ -1,40 +1,23 @@
 /**
  * Created by Greg on 2017/3/6.
  */
-define(['jquery','jqueryUI'],function ($,$UI) {
+define(['jquery','jqueryUI','widget'],function ($,$UI,widget) {
     function Modal() {
-        this.handlers = {};
         this.cfg = {
             width : 500,  //窗体宽度和高度，还有cfg.x和cfg.y确定样式里left和top
             height : 300,
             hasMask : true,
             content : "",  //modal_body中的内容
-            alertHandler : function (){}, //单机确定后的事件函数
+           // alertHandler : function (){}, //单机确定后的事件函数
             alertBtnText : "OK",
             title : "提示", //modal_header中的提示
             hasCloseBtn : false,
-            closeHandler : function () {},
+            //  closeHandler : function () {},
             skinClassName : null, //在窗口上添加一个类名，在css添加选择器实现定制某个窗口样式
             isDraggable : true //是否可以拖动
         };
     }
-    Modal.prototype = {
-        on : function (type,handler) {
-            if (this.handlers[type] == undefined){
-                this.handlers[type] = [];
-            }
-            this.handlers[type].push(handler);
-            return this;
-        },
-        fire : function (type,data) {
-            if (this.handlers[type] instanceof  Array){
-                var handlers = this.handlers[type];
-                for (var i = 0;i < handlers.length;i++){
-                    handlers[i](data);
-                }
-            }
-            return this;
-        },
+    Modal.prototype = $.extend({},new widget.Widget(),{
         alert : function (cfg){
             var config = $.extend(this.cfg,cfg);
             var that = this;
@@ -60,9 +43,9 @@ define(['jquery','jqueryUI'],function ($,$UI) {
                 mask && mask.remove();
                 return false;
             });
-            if (config.alertHandler){
-                this.on("alert",config.alertHandler);
-            }
+            // if (config.alertHandler){
+            //     this.on("alert",config.alertHandler);
+            // }
             boundingBox.css({
                 width : config.width+"px",
                 height : config.height+"px",
@@ -77,17 +60,18 @@ define(['jquery','jqueryUI'],function ($,$UI) {
                     mask && mask.remove();
                     that.fire("close");
                 });
-                if (config.closeHandler){
-                    this.on("close",config.closeHandler);
-                }
+                // if (config.closeHandler){
+                //     this.on("close",config.closeHandler);
+                // }
             }
             if (config.skinClassName) {
                 boundingBox.addClass(config.skinClassName)
             }
+            return this;
         },
         confirm:function () {},
         prompt:function () {}
-    };
+    });
     return {
         Modal:Modal
     }
