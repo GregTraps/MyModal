@@ -7,7 +7,12 @@ require.config({
     }
 });
 require(["jquery","modal"],function ($, m) {
-    $("#btn").click(function () {
-        return new m.Modal().alert("welcome!");
-    })
+    $("#btn-alert").click(function () {
+        return new m.Modal().alert("welcome!",function () {
+            alert("clicked");
+        },{
+            width : 300,
+            height : 150
+        });
+    });
 });
