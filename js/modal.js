@@ -3,6 +3,7 @@
  */
 define(['jquery','jqueryUI'],function ($,$UI) {
     function Modal() {
+        this.handlers = {};
         this.cfg = {
             width : 500,  //窗体宽度和高度，还有cfg.x和cfg.y确定样式里left和top
             height : 300,
@@ -18,8 +19,25 @@ define(['jquery','jqueryUI'],function ($,$UI) {
         };
     }
     Modal.prototype = {
+        on : function (type,handler) {
+            if (this.handlers[type] == undefined){
+                this.handlers[type] = [];
+            }
+            this.handlers[type].push(handler);
+            return this;
+        },
+        fire : function (type,data) {
+            if (this.handlers[type] instanceof  Array){
+                var handlers = this.handlers[type];
+                for (var i = 0;i < handlers.length;i++){
+                    handlers[i](data);
+                }
+            }
+            return this;
+        },
         alert : function (cfg){
             var config = $.extend(this.cfg,cfg);
+            var that = this;
             var boundingBox = $('<div class="modal_boundingBox">'+
                 '<div class="modal_header">'+config.title+'</div>'+
                 '<div class="modal_body">'+config.content+'</div>'+
@@ -37,11 +55,14 @@ define(['jquery','jqueryUI'],function ($,$UI) {
             }
             var btn = boundingBox.find(".modal_footer input");
             btn.click(function(){
-                config.alertHandler && config.alertHandler();
+                that.fire("alert");
                 boundingBox.remove();
                 mask && mask.remove();
                 return false;
             });
+            if (config.alertHandler){
+                this.on("alert",config.alertHandler);
+            }
             boundingBox.css({
                 width : config.width+"px",
                 height : config.height+"px",
@@ -54,8 +75,11 @@ define(['jquery','jqueryUI'],function ($,$UI) {
                 closeBtn.click(function () {
                     boundingBox.remove();
                     mask && mask.remove();
-                    config.closeHandler && config.closeHandler();
+                    that.fire("close");
                 });
+                if (config.closeHandler){
+                    this.on("close",config.closeHandler);
+                }
             }
             if (config.skinClassName) {
                 boundingBox.addClass(config.skinClassName)
