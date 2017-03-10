@@ -1,0 +1,40 @@
+.picroll_window {
+    position: relative;
+    left: 0;
+}
+.picroll_window:after {
+    content: "";
+    height: 0;
+    clear: both;
+}
+.picroll_box {
+    float: left;
+}
+.picroll_box img {
+    width: 100%;
+    height: auto;
+}
+.picroll_nav {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    background-color: rgba(0,0,0,0.5);
+    padding-left: 10px;
+}
+.picroll_nav li {
+    float: left;
+    width: 20px;
+    height: 20px;
+    list-style: circle inside;
+    color: white;
+    font-size: large;
+    line-height: 20px;
+}
+.picroll_nav li:hover {
+    list-style-type: disc;
+}
+.picroll_nav ul {
+    margin: 0;
+    padding: 0;
+    height: 20px;
+}

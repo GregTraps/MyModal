@@ -46,3 +46,11 @@ require(["jquery","modal"],function ($, m) {
         });
     });
 });
+require(['jquery','picroll'],function ($, picroll) {
+    var con =  $(".picroll-container");
+    var createRoll = new picroll.Picroll().createRoll(con,{
+        width : 350,
+        interval : 1500,
+        speed : 700
+    });
+});

@@ -41,6 +41,7 @@ define(['jquery','jqueryUI','widget'],function ($,$UI,widget) {
                 '<div class="modal_footer">'+footerContent+ '</div>');
             if (config.hasMask){
                 this.mask = $('<div class="modal_mask"></div>');
+                this.mask.height($(document).height());
                 this.mask.appendTo("body");
             }
             if (config.isDraggable){
@@ -52,7 +53,7 @@ define(['jquery','jqueryUI','widget'],function ($,$UI,widget) {
                 var closeBtn = $('<span class="modal_closeBtn">X</span>');
                 closeBtn.appendTo(this.boundingBox)
             }
-            this.boundingBox.appendTo(document.body);
+            this.boundingBox.prependTo(document.body);
            // boundingBox.appendTo("body");
         },
         bindUI : function () {
@@ -92,6 +93,7 @@ define(['jquery','jqueryUI','widget'],function ($,$UI,widget) {
         alert : function (cfg){
             $.extend(this.cfg,cfg,{winType : "alert"});
             this.render();
+            //this.boundingBox.css("position","fixed");
             return this;
         },
         confirm:function (cfg) {
