@@ -20,8 +20,7 @@ define(['jquery','widget'],function ($, widget) {
             container.children("div:first").addClass("picroll_window");
             container.find(".picroll_window > div").addClass("picroll_box");
             this.cfg.boxNumber = container.find(".picroll_box").length;
-            container.find(".picroll_box:first").clone().appendTo(container.find(".picroll_window"))
-                .css("margin-right","-"+this.cfg.width+"px");
+            // container.find(".picroll_box:first").clone().appendTo(container.find(".picroll_window")).css("margin-right","-"+this.cfg.width+"px");
             var navLi = "";
             for (var j = 0 ;j<this.cfg.boxNumber;j++){
                 navLi += '<li></li>'
@@ -30,18 +29,39 @@ define(['jquery','widget'],function ($, widget) {
         },
         bindUI : function () {
             var that = this;
-            this.boundingBox.mouseover(function () {
-                clearInterval(that.move);
-            }).mouseleave(function () {
-                clearInterval(that.move);
-                that.moveWindow();
+            this.on("picroll",function (data) {
+                var index = $(data).index();
+                var window = that.boundingBox.find(".picroll_window");
+                xpos = -index * that.cfg.width;
+                window.stop(true, false).animate({left: xpos + "px"}, that.cfg.speed, "swing");
             });
             this.boundingBox.find(".picroll_nav ul").delegate("li","mouseenter",function () {
-                var index = $(this).index();
-                var xpos = - index * that.cfg.width;
-                var window = that.boundingBox.find(".picroll_window");
-                window.stop(true,false).animate({left : xpos+"px"},that.cfg.speed,"swing");
-            })
+                that.fire("picroll",this);
+                $(this).addClass("picroll_nav_hover").siblings().removeClass("picroll_nav_hover");
+                that.boxIndex = $(this).index();
+            });
+
+            this.boxIndex = 0;
+            function autoTrigger() {
+                that.boundingBox.find(".picroll_nav li:nth-child("+(that.boxIndex+1)+")").trigger("mouseenter");
+                that.boxIndex++;
+                if (that.boxIndex == that.cfg.boxNumber){
+                    if (that.cfg.repeat){
+                        that.boxIndex = 0;
+                    }else {
+                        clearInterval(that.rollTrigger);
+                    }
+                }
+                that.rollTrigger = setTimeout(autoTrigger,that.cfg.interval+that.cfg.speed);
+            }
+            autoTrigger();
+            this.boundingBox.mouseover(function () {
+                clearInterval(that.rollTrigger);
+            }).mouseleave(function () {
+                if (that.cfg.repeat){
+                    autoTrigger();
+                }
+            });
         },
         syncUI : function () {
             var container = this.boundingBox;
@@ -64,27 +84,8 @@ define(['jquery','widget'],function ($, widget) {
                 container.addClass(this.cfg.skinClassName);
             }
         },
-        moveWindow : function () {
-            var cfg = this.cfg;
-            var that = this;
-            var window = this.boundingBox.find(".picroll_window");
-            function moveWindow() {
-                window.animate({left : "-="+cfg.width+"px"},cfg.speed,"swing",function () {
-                    var xpos = window.css("left");
-                    var threshold = (-cfg.boxNumber*cfg.width) + "px";
-                    if (xpos == threshold){
-                        if (cfg.repeat){
-                            window.css("left","0");
-                        }else {
-                            clearInterval(that.move);
-                        }
-                    }
-                })
-            }
-            this.move = setInterval(moveWindow,cfg.interval+cfg.speed);
-        },
         destructor : function () {
-
+            this.boundingBox.off();
         },
         render : function (container) {
 
@@ -93,7 +94,7 @@ define(['jquery','widget'],function ($, widget) {
             $.extend(this.cfg,cfg);
             this.renderUI(container);
             this.syncUI();
-            this.moveWindow();
+            this.handlers = {};
             this.bindUI();
         }
     });

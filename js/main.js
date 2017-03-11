@@ -9,10 +9,10 @@ require.config({
         jqueryUI : ["jquery-ui.min"]
     }
 });
-require(["jquery","modal"],function ($, m) {
+require(["jquery","modal","picroll"],function ($, modal,picroll) {
    // var modalAlert = new m.Modal();
     $("#btn-alert").click(function () {
-        return new m.Modal().alert({
+        return new modal.Modal().alert({
             width : 200,
             height : 250,
             content : "Welcome!",
@@ -29,7 +29,7 @@ require(["jquery","modal"],function ($, m) {
         });
     });
     $("#btn-confirm").click(function () {
-        return new m.Modal().confirm({
+        return new modal.Modal().confirm({
             width : 200,
             height : 250,
             content : "Welcome!",
@@ -45,8 +45,6 @@ require(["jquery","modal"],function ($, m) {
             console.log("cancel");
         });
     });
-});
-require(['jquery','picroll'],function ($, picroll) {
     var con =  $(".picroll-container");
     var createRoll = new picroll.Picroll().createRoll(con,{
         width : 350,

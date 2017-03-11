@@ -30,6 +30,9 @@
     font-size: large;
     line-height: 20px;
 }
+.picroll_nav_hover {
+    list-style: disc inside !important;
+}
 .picroll_nav li:hover {
     list-style-type: disc;
 }
