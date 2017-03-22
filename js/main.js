@@ -9,7 +9,7 @@ require.config({
         jqueryUI : ["jquery-ui.min"]
     }
 });
-require(["jquery","modal","picroll"],function ($, modal,picroll) {
+require(["jquery","modal","picroll"],function ($,modal,picroll) {
    // var modalAlert = new m.Modal();
     $("#btn-alert").click(function () {
         return new modal.Modal().alert({

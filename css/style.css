@@ -6,3 +6,9 @@ body,div {
     box-shadow: 0 0 24px;
     margin: 100px ;
 }
+.picroll-container-res {
+    box-shadow: 0 0 24px;
+    margin: 50px 15%;
+    width: 60%;
+    height: 360px;
+}
