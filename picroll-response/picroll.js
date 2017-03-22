@@ -71,7 +71,7 @@ define(['jquery','widget'],function ($, widget) {
                 container.find(".picroll_window").stop(true,true).css({
                     "width" : nowWid * that.cfg.boxNumber
                 });
-                container.css("height" ,nowWid/2.5);
+                container.css("height" ,nowWid/2);
                 container.find(".picroll_box").css({
                     "width" : nowWid
                 });
