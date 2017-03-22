@@ -6,6 +6,7 @@ body,div {
     box-shadow: 0 0 24px;
     margin: 100px ;
 }
+/*对自适应版本支持*/
 .picroll-container-res {
     box-shadow: 0 0 24px;
     margin: 50px 15%;
